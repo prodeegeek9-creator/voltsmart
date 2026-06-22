@@ -1,0 +1,223 @@
+/* ═══════════════════════════════════════════
+   VoltSmart — Mobile / Responsive Styles
+   md ≤ 768px  |  sm ≤ 480px
+═══════════════════════════════════════════ */
+
+/* ── Hamburger button (injected by mobile.js) ── */
+.vs-hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  color: #ECEEF2;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.vs-hamburger:hover { background: rgba(255,255,255,0.1); }
+
+/* ── Mobile nav overlay ── */
+.vs-mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 59;
+  background: rgba(10,11,15,0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  flex-direction: column;
+  padding: 96px 20px 36px;
+  gap: 8px;
+  overflow-y: auto;
+}
+.vs-mobile-menu.vs-open { display: flex; }
+
+.vs-mobile-menu button {
+  width: 100%;
+  text-align: left;
+  padding: 15px 20px;
+  border-radius: 13px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #ECEEF2;
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.vs-mobile-menu button:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.14);
+}
+.vs-mobile-menu .vs-menu-cta {
+  margin-top: 10px;
+  background: linear-gradient(180deg, #CDA876, #B0884F);
+  border-color: rgba(194,160,107,0.5);
+  color: #1B130A;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 12px 30px -8px rgba(176,136,79,0.55);
+}
+.vs-mobile-menu .vs-menu-cta:hover {
+  filter: brightness(1.07);
+  background: linear-gradient(180deg, #CDA876, #B0884F);
+}
+
+/* ══════════════════════════════════
+   TABLET + MOBILE  (≤ 768px)
+══════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Navbar ── */
+  nav {
+    top: 8px !important;
+    width: calc(100% - 16px) !important;
+    padding: 10px 12px !important;
+  }
+  .vs-nav-links { display: none !important; }
+  .vs-hamburger { display: flex; }
+
+  /* ── ALL multi-column grids → stacked ── */
+  [style*="grid-template-columns"] {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  /* keep a sensible gap */
+  [style*="grid-template-columns:repeat(3,1fr)"],
+  [style*="grid-template-columns:repeat(4,1fr)"],
+  [style*="grid-template-columns:repeat(5,1fr)"] {
+    gap: 14px !important;
+  }
+
+  /* ── Sections: tighten side padding ── */
+  section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* ── Page header blocks (170 / 150 / 70 / 50 / 48 / 46 / 40 / 30 / 24 / 20px top) ── */
+  [style*="padding:170px 36px"] {
+    padding-top: 110px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  [style*="padding:150px 36px"] {
+    padding-top: 88px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  [style*="padding:70px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
+  [style*="padding:50px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
+  [style*="padding:48px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
+  [style*="padding:46px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
+  [style*="padding:40px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
+  [style*="padding:34px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
+  [style*="padding:30px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
+  [style*="padding:24px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
+  [style*="padding:20px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* ── Hero: disable 300vh sticky-scroll container ── */
+  [style*="height:300vh"] { height: auto !important; }
+  [style*="position:sticky; top:0; height:100vh"] {
+    position: relative !important;
+    height: 100svh !important;
+    min-height: 520px !important;
+  }
+
+  /* ── Hero: content area padding ── */
+  [style*="padding:0 36px; display:flex; align-items:center"] {
+    padding: 80px 20px 24px !important;
+    align-items: flex-end !important;
+  }
+
+  /* ── Hero: hide right floating panels ── */
+  [style*="right:40px; top:120px"],
+  [style*="right:36px; bottom:120px"] { display: none !important; }
+
+  /* ── Hero: hide bottom status bar ── */
+  [style*="bottom:32px; left:50%"] { display: none !important; }
+
+  /* ── Hero: reduce top margin on scroll hint ── */
+  [style*="margin-top:56px"] { margin-top: 28px !important; }
+
+  /* ── Hero CTA buttons: stack vertically ── */
+  [style*="gap:14px; flex-wrap:wrap"] {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  /* ── Experience section: inner card padding ── */
+  [style*="padding:64px 56px; display:flex; flex-direction:column"] {
+    padding: 28px 20px !important;
+  }
+
+  /* ── Security command-center: remove vertical border, replace with horizontal ── */
+  [style*="border-right:1px solid rgba(255,255,255,0.06)"] {
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+    min-height: 280px !important;
+  }
+
+  /* ── Packages / Security cards: tighten inner padding ── */
+  [style*="padding:32px 28px; border-radius:18px"],
+  [style*="padding:32px 26px; border-radius:18px"] {
+    padding: 22px 16px !important;
+  }
+
+  /* ── Shop: install banner ── */
+  [style*="padding:30px 36px; border-radius:18px"] {
+    padding: 20px 16px !important;
+  }
+  [style*="flex-wrap:wrap; gap:20px; align-items:center; justify-content:space-between"] {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+  }
+
+  /* ── Contact wizard: inner padding ── */
+  [style*="padding:48px 48px"] { padding: 24px 18px !important; }
+
+  /* ── Body copy: slightly smaller on mobile ── */
+  p[style*="font-size:19px"] { font-size: 16px !important; }
+  p[style*="font-size:18px"] { font-size: 15px !important; }
+  p[style*="font-size:17px"] { font-size: 15px !important; }
+}
+
+/* ══════════════════════════════════
+   SMALL MOBILE  (≤ 480px)
+══════════════════════════════════ */
+@media (max-width: 480px) {
+
+  nav {
+    top: 6px !important;
+    width: calc(100% - 12px) !important;
+    padding: 8px 10px !important;
+  }
+
+  /* Logo text: hide tagline, keep wordmark */
+  [style*="font-size:9px; letter-spacing:2px"] { display: none !important; }
+
+  /* Hero headline: clamp tighter */
+  h1[style*="clamp(56px"] {
+    font-size: clamp(36px, 9vw, 56px) !important;
+    line-height: 1 !important;
+  }
+
+  /* Reduce hero content padding further */
+  [style*="padding:0 36px; display:flex; align-items:center"] {
+    padding: 70px 16px 20px !important;
+  }
+
+  /* Why VoltSmart / stats section top padding */
+  [style*="padding:150px 36px"] {
+    padding-top: 60px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+}
