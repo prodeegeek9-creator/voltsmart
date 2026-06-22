@@ -122,26 +122,42 @@
   [style*="padding:24px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
   [style*="padding:20px 36px"]  { padding-left: 16px !important; padding-right: 16px !important; }
 
-  /* ── Hero: disable 300vh sticky-scroll container ── */
+  /* ── Hero: JS-tagged elements (added by inline script via el.style props) ── */
+  .vs-hero-wrapper { height: auto !important; }
+  .vs-hero-sticky {
+    position: relative !important;
+    height: 100svh !important;
+    min-height: 520px !important;
+  }
+  .vs-hero-content {
+    padding: 80px 20px 24px !important;
+    align-items: flex-end !important;
+  }
+  .vs-hero-rail,
+  .vs-hero-panel { display: none !important; }
+  .vs-hero-bar   { display: none !important; }
+
+  /* ── Grids: JS-tagged fallback + CSS attr selector ── */
+  .vs-grid,
+  [style*="grid-template-columns"] {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* ── Hero attr-selector fallbacks (work if browser doesn't normalise) ── */
   [style*="height:300vh"] { height: auto !important; }
   [style*="position:sticky; top:0; height:100vh"] {
     position: relative !important;
     height: 100svh !important;
     min-height: 520px !important;
   }
-
-  /* ── Hero: content area padding ── */
   [style*="padding:0 36px; display:flex; align-items:center"] {
     padding: 80px 20px 24px !important;
     align-items: flex-end !important;
   }
-
-  /* ── Hero: hide right floating panels ── */
   [style*="right:40px; top:120px"],
   [style*="right:36px; bottom:120px"] { display: none !important; }
-
-  /* ── Hero: hide bottom status bar ── */
-  [style*="bottom:32px; left:50%"] { display: none !important; }
+  [style*="bottom:32px; left:50%"]    { display: none !important; }
 
   /* ── Hero: reduce top margin on scroll hint ── */
   [style*="margin-top:56px"] { margin-top: 28px !important; }

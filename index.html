@@ -1682,68 +1682,97 @@ class Component extends DCLogic {
 
 <script>
 (function () {
-  var ICON_MENU = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="17" y2="6"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="14" x2="17" y2="14"/></svg>';
+  var ICON_MENU  = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="17" y2="6"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="14" x2="17" y2="14"/></svg>';
   var ICON_CLOSE = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="4" x2="16" y2="16"/><line x1="16" y1="4" x2="4" y2="16"/></svg>';
 
-  function init() {
+  /* ── Hamburger / mobile nav overlay ── */
+  function initNav() {
     var nav = document.querySelector('nav');
-    if (!nav || nav.querySelector('.vs-hamburger')) return;
+    if (!nav || nav.querySelector('.vs-hamburger')) return false;
 
-    /* tag the desktop nav-links div so CSS can hide it on mobile */
     var navLinksDiv = nav.children[1];
     if (navLinksDiv) navLinksDiv.classList.add('vs-nav-links');
 
-    /* hamburger button */
     var hamburger = document.createElement('button');
     hamburger.className = 'vs-hamburger';
     hamburger.setAttribute('aria-label', 'Open menu');
     hamburger.innerHTML = ICON_MENU;
     nav.appendChild(hamburger);
 
-    /* overlay menu */
     var overlay = document.createElement('div');
     overlay.className = 'vs-mobile-menu';
     overlay.setAttribute('role', 'dialog');
     overlay.setAttribute('aria-modal', 'true');
 
-    /* copy desktop nav buttons into the overlay */
-    var srcBtns = Array.from(nav.querySelectorAll('.vs-nav-links button'));
-    srcBtns.forEach(function (src) {
+    Array.from(nav.querySelectorAll('.vs-nav-links button')).forEach(function (src) {
       var b = document.createElement('button');
       b.textContent = src.textContent.trim();
       if (b.textContent === 'Book a Consultation') b.classList.add('vs-menu-cta');
       b.addEventListener('click', function () { src.click(); closeMenu(); });
       overlay.appendChild(b);
     });
-
     document.body.appendChild(overlay);
 
     var isOpen = false;
-
-    function openMenu() {
-      isOpen = true;
-      overlay.classList.add('vs-open');
-      hamburger.innerHTML = ICON_CLOSE;
-      hamburger.setAttribute('aria-label', 'Close menu');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeMenu() {
-      isOpen = false;
-      overlay.classList.remove('vs-open');
-      hamburger.innerHTML = ICON_MENU;
-      hamburger.setAttribute('aria-label', 'Open menu');
-      document.body.style.overflow = '';
-    }
-
+    function openMenu()  { isOpen = true;  overlay.classList.add('vs-open');    hamburger.innerHTML = ICON_CLOSE; hamburger.setAttribute('aria-label','Close menu'); document.body.style.overflow = 'hidden'; }
+    function closeMenu() { isOpen = false; overlay.classList.remove('vs-open'); hamburger.innerHTML = ICON_MENU;  hamburger.setAttribute('aria-label','Open menu');  document.body.style.overflow = ''; }
     hamburger.addEventListener('click', function () { isOpen ? closeMenu() : openMenu(); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+    return true;
   }
 
-  /* wait for the template engine to finish rendering the nav */
+  /* ── Tag hero overlay elements using el.style props (reliable after browser normalises values) ──
+     CSS attribute selectors like [style*="right:40px"] fail when the browser reformats the
+     style attribute to "right: 40px" (space after colon). Reading el.style.right is always "40px". */
+  function markHeroElements() {
+    var all = document.querySelectorAll('*');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      var s  = el.style;
+      if (!s) continue;
+
+      // Scene progress rail  (position:absolute; right:40px; top:120px)
+      if (s.position === 'absolute' && s.right === '40px' && s.top === '120px')
+        el.classList.add('vs-hero-rail');
+
+      // Home Overview floating panel  (position:absolute; right:36px; bottom:120px)
+      if (s.position === 'absolute' && s.right === '36px' && s.bottom === '120px')
+        el.classList.add('vs-hero-panel');
+
+      // Bottom status bar  (position:absolute; bottom:32px; left:50%)
+      if (s.position === 'absolute' && s.bottom === '32px' && s.left === '50%')
+        el.classList.add('vs-hero-bar');
+
+      // 300 vh hero scroll wrapper
+      if (s.height === '300vh')
+        el.classList.add('vs-hero-wrapper');
+
+      // Sticky viewport container
+      if (s.position === 'sticky' && s.height === '100vh')
+        el.classList.add('vs-hero-sticky');
+
+      // Hero text content area (max-width:1380px flex container that holds the H1)
+      if (s.maxWidth === '1380px' && s.display === 'flex' && s.alignItems === 'center'
+          && el.querySelector && el.querySelector('h1'))
+        el.classList.add('vs-hero-content');
+
+      // Any grid container the CSS attr selector might have missed
+      if (s.display === 'grid' && s.gridTemplateColumns)
+        el.classList.add('vs-grid');
+    }
+  }
+
+  function run() {
+    initNav();
+    markHeroElements();
+    // Re-run after sc-for elements finish rendering
+    setTimeout(markHeroElements, 700);
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 300); });
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(run, 300); });
   } else {
-    setTimeout(init, 300);
+    setTimeout(run, 300);
   }
 })();
 </script>
