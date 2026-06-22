@@ -3,6 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="assets/js/script-1.js"></script>
+<link rel="stylesheet" href="assets/css/mobile.css">
 </head>
 <body>
 <x-dc>
@@ -1678,4 +1679,72 @@ class Component extends DCLogic {
 </script>
 
 
+
+<script>
+(function () {
+  var ICON_MENU = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="17" y2="6"/><line x1="3" y1="10" x2="17" y2="10"/><line x1="3" y1="14" x2="17" y2="14"/></svg>';
+  var ICON_CLOSE = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="4" x2="16" y2="16"/><line x1="16" y1="4" x2="4" y2="16"/></svg>';
+
+  function init() {
+    var nav = document.querySelector('nav');
+    if (!nav || nav.querySelector('.vs-hamburger')) return;
+
+    /* tag the desktop nav-links div so CSS can hide it on mobile */
+    var navLinksDiv = nav.children[1];
+    if (navLinksDiv) navLinksDiv.classList.add('vs-nav-links');
+
+    /* hamburger button */
+    var hamburger = document.createElement('button');
+    hamburger.className = 'vs-hamburger';
+    hamburger.setAttribute('aria-label', 'Open menu');
+    hamburger.innerHTML = ICON_MENU;
+    nav.appendChild(hamburger);
+
+    /* overlay menu */
+    var overlay = document.createElement('div');
+    overlay.className = 'vs-mobile-menu';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+
+    /* copy desktop nav buttons into the overlay */
+    var srcBtns = Array.from(nav.querySelectorAll('.vs-nav-links button'));
+    srcBtns.forEach(function (src) {
+      var b = document.createElement('button');
+      b.textContent = src.textContent.trim();
+      if (b.textContent === 'Book a Consultation') b.classList.add('vs-menu-cta');
+      b.addEventListener('click', function () { src.click(); closeMenu(); });
+      overlay.appendChild(b);
+    });
+
+    document.body.appendChild(overlay);
+
+    var isOpen = false;
+
+    function openMenu() {
+      isOpen = true;
+      overlay.classList.add('vs-open');
+      hamburger.innerHTML = ICON_CLOSE;
+      hamburger.setAttribute('aria-label', 'Close menu');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMenu() {
+      isOpen = false;
+      overlay.classList.remove('vs-open');
+      hamburger.innerHTML = ICON_MENU;
+      hamburger.setAttribute('aria-label', 'Open menu');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', function () { isOpen ? closeMenu() : openMenu(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+  }
+
+  /* wait for the template engine to finish rendering the nav */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(init, 300); });
+  } else {
+    setTimeout(init, 300);
+  }
+})();
+</script>
 </body></html>
